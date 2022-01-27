@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CacheToInternalDtoConverter
-        implements Converter<dev.vality.swag.fraudbusters.model.CashInfo, Cash> {
+        implements Converter<CashInfo, Cash> {
 
     @Override
     public Cash convert(CashInfo cashInfo) {
