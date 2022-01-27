@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.4</version>
     </parent>
 
     <artifactId>fraudbusters-api</artifactId>
@@ -19,18 +19,17 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>15</java.version>
         <server.port>8022</server.port>
         <management.port>8023</management.port>
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
-        <swag-fraudbusters.version>1.35-11f2126-server</swag-fraudbusters.version>
-        <fraudbusters-proto.version>1.99-2a8f6ca</fraudbusters-proto.version>
+        <swag-fraudbusters.version>1.1-a395576-server</swag-fraudbusters.version>
+        <fraudbusters-proto.version>1.102-269908f</fraudbusters-proto.version>
     </properties>
 
     <dependencies>
 
-        <!--rbkmoney-->
+        <!--rbkmoney&ValityDev-->
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>custom-metrics-spring-boot-starter</artifactId>
@@ -40,7 +39,7 @@
             <artifactId>custom-actuator-endpoints</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.woody</groupId>
+            <groupId>dev.vality.woody</groupId>
             <artifactId>woody-thrift</artifactId>
         </dependency>
         <dependency>
@@ -48,12 +47,12 @@
             <artifactId>shared-resources</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>swag-fraudbusters</artifactId>
             <version>${swag-fraudbusters.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>fraudbusters-proto</artifactId>
             <version>${fraudbusters-proto.version}</version>
         </dependency>
