@@ -43,4 +43,3 @@ fraudbusters:
     inspector:
       url: localhost:8022
       networkTimeout: 10000
-
