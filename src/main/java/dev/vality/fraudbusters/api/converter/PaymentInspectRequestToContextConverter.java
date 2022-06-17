@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static dev.vality.fraudbusters.api.constants.PaymentResourceType.BANK_CARD;
+import static dev.vality.fraudbusters.api.constants.PaymentResourceTypes.BANK_CARD;
 
 @Component
 @RequiredArgsConstructor

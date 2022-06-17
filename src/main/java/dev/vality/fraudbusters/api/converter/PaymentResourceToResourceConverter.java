@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import static dev.vality.fraudbusters.api.constants.PaymentResourceType.BANK_CARD;
+import static dev.vality.fraudbusters.api.constants.PaymentResourceTypes.BANK_CARD;
 
 @Component
 @RequiredArgsConstructor

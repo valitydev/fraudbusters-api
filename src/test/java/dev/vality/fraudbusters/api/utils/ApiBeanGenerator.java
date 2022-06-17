@@ -6,7 +6,7 @@ import dev.vality.swag.fraudbusters.model.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-import static dev.vality.fraudbusters.api.constants.PaymentResourceType.BANK_CARD;
+import static dev.vality.fraudbusters.api.constants.PaymentResourceTypes.BANK_CARD;
 
 public class ApiBeanGenerator {
 
