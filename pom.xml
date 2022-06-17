@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.16</version>
     </parent>
 
     <artifactId>fraudbusters-api</artifactId>
@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <name>fraudbusters-api</name>
-    <description></description>
+    <description>External Fraudbusters API</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,26 +24,18 @@
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
         <swag-fraudbusters.version>1.1-a395576-server</swag-fraudbusters.version>
-        <fraudbusters-proto.version>1.102-269908f</fraudbusters-proto.version>
+        <fraudbusters-proto.version>1.108-0800fde</fraudbusters-proto.version>
     </properties>
 
     <dependencies>
 
-        <!--rbkmoney&ValityDev-->
-        <dependency>
-            <groupId>com.rbkmoney</groupId>
-            <artifactId>custom-metrics-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.rbkmoney</groupId>
-            <artifactId>custom-actuator-endpoints</artifactId>
-        </dependency>
+        <!--ValityDev-->
         <dependency>
             <groupId>dev.vality.woody</groupId>
             <artifactId>woody-thrift</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>shared-resources</artifactId>
         </dependency>
         <dependency>
@@ -57,11 +49,11 @@
             <version>${fraudbusters-proto.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.geck</groupId>
+            <groupId>dev.vality.geck</groupId>
             <artifactId>serializer</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.geck</groupId>
+            <groupId>dev.vality.geck</groupId>
             <artifactId>common</artifactId>
         </dependency>
 
@@ -103,6 +95,14 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
         <!--test-->
@@ -155,7 +155,7 @@
                 </dependencies>
                 <configuration>
                     <resourceBundles>
-                        <resourceBundle>com.rbkmoney:shared-resources:${shared-resources.version}</resourceBundle>
+                        <resourceBundle>dev.vality:shared-resources:${shared-resources.version}</resourceBundle>
                     </resourceBundles>
                     <attachToMain>false</attachToMain>
                     <attachToTest>false</attachToTest>
