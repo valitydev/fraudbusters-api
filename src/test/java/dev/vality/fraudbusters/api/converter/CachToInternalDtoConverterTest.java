@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class CacheToInternalDtoConverterTest {
+class CachToInternalDtoConverterTest {
 
     @Test
     void convert() throws TException {
-        CacheToInternalDtoConverter cacheToInternalDtoConverter = new CacheToInternalDtoConverter();
+        CachToInternalDtoConverter cachToInternalDtoConverter = new CachToInternalDtoConverter();
 
-        Cash cash = cacheToInternalDtoConverter.convert(ApiBeanGenerator.initCashInfo());
+        Cash cash = cachToInternalDtoConverter.convert(ApiBeanGenerator.initCash());
 
         assertNotNull(cash);
         cash.validate();

@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChargebacksRequestToChargebacksConverter implements Converter<ChargebacksRequest, List<Chargeback>> {
 
-    private final CacheToInternalDtoConverter cacheToInternalDtoConverter;
-    private final ClientInfoToInternalDtoConverter clientInfoToInternalDtoConverter;
-    private final PaymentToolToInternalDtoConverter paymentToolToInternalDtoConverter;
-    private final ProviderInfoToInternalDtoConverter providerInfoToInternalDtoConverter;
-    private final ReferenceInfoToInternalDtoConverter referenceInfoToInternalDtoConverter;
+    private final CachToInternalDtoConverter cachToInternalDtoConverter;
+    private final CustomerToInternalDtoConverter customerToInternalDtoConverter;
+    private final PaymentResourceToPaymentToolConverter paymentResourceToPaymentToolConverter;
+    private final ProviderToInternalDtoConverter providerToInternalDtoConverter;
+    private final MerchantToInternalDtoConverter merchantToInternalDtoConverter;
 
     @Override
     public List<Chargeback> convert(ChargebacksRequest chargebacksRequest) {
@@ -33,16 +33,16 @@ public class ChargebacksRequestToChargebacksConverter implements Converter<Charg
         return new Chargeback()
                 .setChargebackCode(item.getChargebackCode())
                 .setCategory(ChargebackCategory.valueOf(item.getCategory().getValue()))
-                .setCost(cacheToInternalDtoConverter.convert(item.getCashInfo()))
+                .setCost(cachToInternalDtoConverter.convert(item.getCash()))
                 .setId(item.getId())
                 .setEventTime(item.getEventTime().toInstant().toString())
-                .setClientInfo(clientInfoToInternalDtoConverter.convert(item.getPayerInfo()))
+                .setClientInfo(customerToInternalDtoConverter.convert(item.getCustomer()))
                 .setPayerType(PayerType.valueOf(item.getPayerType().getValue()))
                 .setPaymentId(item.getPaymentId())
-                .setPaymentTool(paymentToolToInternalDtoConverter.convert(item.getBankCard()))
-                .setProviderInfo(providerInfoToInternalDtoConverter.convert(item.getProviderInfo()))
-                .setReferenceInfo(referenceInfoToInternalDtoConverter.convert(item.getMerchantInfo()))
-                .setStatus(ChargebackStatus.valueOf(item.getStatus().getValue()));
+                .setProviderInfo(providerToInternalDtoConverter.convert(item.getProvider()))
+                .setReferenceInfo(merchantToInternalDtoConverter.convert(item.getMerchant()))
+                .setStatus(ChargebackStatus.valueOf(item.getStatus().getValue()))
+                .setPaymentTool(paymentResourceToPaymentToolConverter.convert(item.getPaymentResource()));
     }
 
 }

@@ -9,13 +9,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class PaymentToolToInternalDtoConverterTest {
+class PaymentResourceToPaymentToolConverterTest {
 
     @Test
     void convert() throws TException {
-        PaymentToolToInternalDtoConverter converter =
-                new PaymentToolToInternalDtoConverter(new BankCardToInternalDtoConverter());
-
+        PaymentResourceToPaymentToolConverter converter =
+                new PaymentResourceToPaymentToolConverter(new BankCardToInternalDtoConverter());
         PaymentTool paymentTool = converter.convert(ApiBeanGenerator.initBankCard());
 
         assertNotNull(paymentTool);

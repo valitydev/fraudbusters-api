@@ -1,94 +1,120 @@
 package dev.vality.fraudbusters.api.converter;
 
+import dev.vality.damsel.domain.BankCard;
 import dev.vality.damsel.domain.*;
 import dev.vality.damsel.proxy_inspector.Invoice;
 import dev.vality.damsel.proxy_inspector.InvoicePayment;
 import dev.vality.damsel.proxy_inspector.Party;
 import dev.vality.damsel.proxy_inspector.Shop;
 import dev.vality.damsel.proxy_inspector.*;
-import dev.vality.swag.fraudbusters.model.MerchantInfo;
-import dev.vality.swag.fraudbusters.model.PaymentContext;
-import dev.vality.swag.fraudbusters.model.PaymentInspectRequest;
+import dev.vality.swag.fraudbusters.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
+import static dev.vality.fraudbusters.api.constants.PaymentResourceType.BANK_CARD;
 
 @Component
 @RequiredArgsConstructor
 public class PaymentInspectRequestToContextConverter implements Converter<PaymentInspectRequest, Context> {
 
     public static final String MOCK_UNUSED_DATA = "MOCK_UNUSED_DATA";
-    private final CacheToInternalDtoConverter cacheToInternalDtoConverter;
+    private final CachToInternalDtoConverter cachToInternalDtoConverter;
 
     @Override
     public Context convert(PaymentInspectRequest request) {
-        PaymentContext context = request.getContext();
-        dev.vality.swag.fraudbusters.model.BankCard bankCard = context.getBankCard();
-        MerchantInfo merchantInfo = context.getMerchantInfo();
+        var payment = request.getPayment();
+        Merchant merchant = payment.getMerchant();
         return new Context()
                 .setPayment(new PaymentInfo()
-                        .setShop(initShop(merchantInfo))
-                        .setParty(initParty(merchantInfo))
-                        .setInvoice(initInvoice(request, context))
-                        .setPayment(initInvoicePayment(context, bankCard))
-                );
+                        .setShop(buildShop(merchant))
+                        .setParty(buildParty(merchant))
+                        .setInvoice(buildInvoice(payment))
+                        .setPayment(buildInvoicePayment(payment)));
     }
 
-    private InvoicePayment initInvoicePayment(PaymentContext context,
-                                              dev.vality.swag.fraudbusters.model.BankCard bankCard) {
-        return new InvoicePayment()
-                .setCost(cacheToInternalDtoConverter.convert(context.getCashInfo()))
-                .setId(context.getId())
-                .setCreatedAt(context.getCreatedAt().toInstant().toString())
-                .setPayer(Payer.payment_resource(new PaymentResourcePayer()
-                                .setContactInfo(new ContactInfo()
-                                        .setEmail(context.getPayerInfo().getEmail())
-                                        .setPhoneNumber(context.getPayerInfo().getPhone())
-                                )
-                                .setResource(new DisposablePaymentResource()
-                                        .setClientInfo(new ClientInfo()
-                                                .setFingerprint(context.getPayerInfo().getFingerprint())
-                                                .setIpAddress(context.getPayerInfo().getIp()))
-                                        .setPaymentTool(PaymentTool.bank_card(new BankCard()
-                                                .setPaymentSystem(new PaymentSystemRef()
-                                                        .setId(bankCard.getPaymentSystem()))
-                                                .setIssuerCountry(CountryCode.valueOf(
-                                                        bankCard.getBinCountryCode()))
-                                                .setBankName(bankCard.getBankName())
-                                                .setBin(bankCard.getBin())
-                                                .setLastDigits(bankCard.getLastDigits())
-                                                .setToken(bankCard.getCardToken())
-                                        ))
-                                )
-                        )
-                )
-                .setMakeRecurrent(context.getRecurrent());
-    }
-
-    private Invoice initInvoice(PaymentInspectRequest request, PaymentContext context) {
-        return new Invoice()
-                .setId(request.getContext().getId())
-                .setDetails(new InvoiceDetails()
-                        // TODO add product to swag
-                        .setProduct(MOCK_UNUSED_DATA))
-                .setCreatedAt(context.getCreatedAt().toInstant().toString())
-                .setDue(context.getCreatedAt().toInstant().toString());
-    }
-
-    private Party initParty(MerchantInfo merchantInfo) {
-        return new Party()
-                .setPartyId(merchantInfo.getPartyId());
-    }
-
-    private Shop initShop(MerchantInfo merchantInfo) {
+    private Shop buildShop(Merchant merchant) {
+        var shop = merchant.getShop();
         return new Shop()
-                .setId(merchantInfo.getShopId())
+                .setId(shop.getId())
                 .setDetails(new ShopDetails()
-                        .setName(MOCK_UNUSED_DATA)
-                )
+                        .setName(shop.getName()))
                 .setCategory(new Category()
-                        .setName(MOCK_UNUSED_DATA)
+                        .setName(shop.getCategory())
                         .setDescription(MOCK_UNUSED_DATA))
-                .setLocation(ShopLocation.url(MOCK_UNUSED_DATA));
+                .setLocation(ShopLocation.url(shop.getLocation()));
+    }
+
+    private Party buildParty(Merchant merchant) {
+        return new Party()
+                .setPartyId(merchant.getId());
+    }
+
+    private Invoice buildInvoice(Payment payment) {
+        return new Invoice()
+                .setId(payment.getId())
+                .setDetails(new InvoiceDetails()
+                        .setProduct(payment.getDescription()))
+                .setCreatedAt(payment.getCreatedAt().toInstant().toString())
+                .setDue(payment.getCreatedAt().toInstant().toString());
+    }
+
+    private InvoicePayment buildInvoicePayment(Payment payment) {
+        InvoicePayment invoicePayment = new InvoicePayment()
+                .setCost(cachToInternalDtoConverter.convert(payment.getCash()))
+                .setId(payment.getId())
+                .setCreatedAt(payment.getCreatedAt().toInstant().toString())
+                .setPayer(Payer.payment_resource(new PaymentResourcePayer()
+                        .setContactInfo(buildContactInfo(payment))
+                        .setResource(buildResource(payment))));
+        if (PayerType.RECURRENT.equals(payment.getPayerType())) {
+            invoicePayment.setMakeRecurrent(true);
+        }
+        return invoicePayment;
+    }
+
+    private ContactInfo buildContactInfo(Payment payment) {
+        Contact contact = Optional.ofNullable(payment.getCustomer())
+                .map(Customer::getContact)
+                .orElseGet(Contact::new);
+        return new ContactInfo()
+                .setEmail(contact.getEmail())
+                .setPhoneNumber(contact.getPhone());
+    }
+
+    private DisposablePaymentResource buildResource(Payment payment) {
+        return new DisposablePaymentResource()
+                .setClientInfo(buildClientInfo(payment))
+                .setPaymentTool(buildPaymentTool(payment.getPaymentResource()));
+    }
+
+    private ClientInfo buildClientInfo(Payment payment) {
+        Device device = Optional.ofNullable(payment.getCustomer())
+                .map(Customer::getDevice)
+                .orElseGet(Device::new);
+        return new ClientInfo()
+                .setFingerprint(device.getFingerprint())
+                .setIpAddress(device.getIp());
+    }
+
+    private PaymentTool buildPaymentTool(PaymentResource paymentResource) {
+        return switch (paymentResource.getType()) {
+            case BANK_CARD -> buildCard((dev.vality.swag.fraudbusters.model.BankCard) paymentResource);
+            default -> null;
+        };
+    }
+
+    private PaymentTool buildCard(dev.vality.swag.fraudbusters.model.BankCard bankCard) {
+        return PaymentTool.bank_card(new BankCard()
+                .setPaymentSystem(new PaymentSystemRef()
+                        .setId(bankCard.getPaymentSystem()))
+                .setIssuerCountry(CountryCode.valueOf(
+                        bankCard.getCountryCode()))
+                .setBankName(bankCard.getBankName())
+                .setBin(bankCard.getBin())
+                .setLastDigits(bankCard.getLastDigits())
+                .setToken(bankCard.getCardToken()));
     }
 }

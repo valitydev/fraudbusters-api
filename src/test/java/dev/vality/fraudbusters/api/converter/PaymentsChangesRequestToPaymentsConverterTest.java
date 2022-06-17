@@ -17,26 +17,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class PaymentsChangesRequestToPaymentsConverterTest {
 
     @Mock
-    CacheToInternalDtoConverter cacheToInternalDtoConverter;
+    CachToInternalDtoConverter cachToInternalDtoConverter;
     @Mock
-    ClientInfoToInternalDtoConverter clientInfoToInternalDtoConverter;
+    CustomerToInternalDtoConverter customerToInternalDtoConverter;
     @Mock
-    PaymentToolToInternalDtoConverter paymentToolToInternalDtoConverter;
+    PaymentResourceToPaymentToolConverter paymentResourceToPaymentToolConverter;
     @Mock
-    ProviderInfoToInternalDtoConverter providerInfoToInternalDtoConverter;
+    ProviderToInternalDtoConverter providerToInternalDtoConverter;
     @Mock
-    ReferenceInfoToInternalDtoConverter referenceInfoToInternalDtoConverter;
+    MerchantToInternalDtoConverter merchantToInternalDtoConverter;
     @Mock
     ErrorToInternalDtoConverter errorToInternalDtoConverter;
 
     @Test
     void convert() {
         PaymentsChangesRequestToPaymentsConverter converter = new PaymentsChangesRequestToPaymentsConverter(
-                cacheToInternalDtoConverter,
-                clientInfoToInternalDtoConverter,
-                paymentToolToInternalDtoConverter,
-                providerInfoToInternalDtoConverter,
-                referenceInfoToInternalDtoConverter,
+                cachToInternalDtoConverter,
+                customerToInternalDtoConverter,
+                paymentResourceToPaymentToolConverter,
+                providerToInternalDtoConverter,
+                merchantToInternalDtoConverter,
                 errorToInternalDtoConverter
         );
 
@@ -54,7 +54,7 @@ class PaymentsChangesRequestToPaymentsConverterTest {
         assertEquals(ApiBeanGenerator.ID, payment.getId());
         assertNotNull(payment.getEventTime());
         assertEquals(PaymentStatus.captured, payment.getStatus());
-        assertEquals(ApiBeanGenerator.MOBILE, payment.isMobile());
-        assertEquals(ApiBeanGenerator.RECURRENT, payment.isRecurrent());
+        assertFalse(payment.isMobile());
+        assertTrue(payment.isRecurrent());
     }
 }

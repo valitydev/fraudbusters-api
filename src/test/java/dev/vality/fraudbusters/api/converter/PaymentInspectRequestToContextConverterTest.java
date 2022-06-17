@@ -13,10 +13,10 @@ class PaymentInspectRequestToContextConverterTest {
     @Test
     void convertTest() throws TException {
         PaymentInspectRequestToContextConverter paymentInspectRequestToContextConverter =
-                new PaymentInspectRequestToContextConverter(new CacheToInternalDtoConverter());
+                new PaymentInspectRequestToContextConverter(new CachToInternalDtoConverter());
 
         Context context = paymentInspectRequestToContextConverter.convert(new PaymentInspectRequest()
-                .context(ApiBeanGenerator.initPaymentContext()));
+                .payment(ApiBeanGenerator.initPayment()));
 
         assertNotNull(context);
         context.validate();

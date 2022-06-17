@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RefundsRequestToRefundsConverter implements Converter<RefundsRequest, List<Refund>> {
 
-    private final CacheToInternalDtoConverter cacheToInternalDtoConverter;
-    private final ClientInfoToInternalDtoConverter clientInfoToInternalDtoConverter;
-    private final PaymentToolToInternalDtoConverter paymentToolToInternalDtoConverter;
-    private final ProviderInfoToInternalDtoConverter providerInfoToInternalDtoConverter;
-    private final ReferenceInfoToInternalDtoConverter referenceInfoToInternalDtoConverter;
+    private final CachToInternalDtoConverter cachToInternalDtoConverter;
+    private final CustomerToInternalDtoConverter customerToInternalDtoConverter;
+    private final PaymentResourceToPaymentToolConverter paymentResourceToPaymentToolConverter;
+    private final ProviderToInternalDtoConverter providerToInternalDtoConverter;
+    private final MerchantToInternalDtoConverter merchantToInternalDtoConverter;
     private final ErrorToInternalDtoConverter errorToInternalDtoConverter;
 
     @Override
@@ -31,17 +31,17 @@ public class RefundsRequestToRefundsConverter implements Converter<RefundsReques
 
     private Refund mapRefund(dev.vality.swag.fraudbusters.model.Refund item) {
         return new Refund()
-                .setCost(cacheToInternalDtoConverter.convert(item.getCashInfo()))
+                .setCost(cachToInternalDtoConverter.convert(item.getCash()))
                 .setId(item.getId())
                 .setEventTime(item.getEventTime().toInstant().toString())
-                .setClientInfo(clientInfoToInternalDtoConverter.convert(item.getPayerInfo()))
+                .setClientInfo(customerToInternalDtoConverter.convert(item.getCustomer()))
                 .setPayerType(PayerType.valueOf(item.getPayerType().getValue()))
-                .setPaymentTool(paymentToolToInternalDtoConverter.convert(item.getBankCard()))
-                .setProviderInfo(providerInfoToInternalDtoConverter.convert(item.getProviderInfo()))
-                .setReferenceInfo(referenceInfoToInternalDtoConverter.convert(item.getMerchantInfo()))
+                .setProviderInfo(providerToInternalDtoConverter.convert(item.getProvider()))
+                .setReferenceInfo(merchantToInternalDtoConverter.convert(item.getMerchant()))
                 .setStatus(RefundStatus.valueOf(item.getStatus().getValue()))
                 .setError(errorToInternalDtoConverter.convert(item.getError()))
-                .setPaymentId(item.getPaymentId());
+                .setPaymentId(item.getPaymentId())
+                .setPaymentTool(paymentResourceToPaymentToolConverter.convert(item.getPaymentResource()));
     }
 
 }

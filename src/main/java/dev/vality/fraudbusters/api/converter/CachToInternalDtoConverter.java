@@ -2,20 +2,19 @@ package dev.vality.fraudbusters.api.converter;
 
 import dev.vality.damsel.domain.Cash;
 import dev.vality.damsel.domain.CurrencyRef;
-import dev.vality.swag.fraudbusters.model.CashInfo;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CacheToInternalDtoConverter
-        implements Converter<CashInfo, Cash> {
+public class CachToInternalDtoConverter
+        implements Converter<dev.vality.swag.fraudbusters.model.Cash, Cash> {
 
     @Override
-    public Cash convert(CashInfo cashInfo) {
+    public Cash convert(dev.vality.swag.fraudbusters.model.Cash cash) {
         return new Cash()
-                .setAmount(cashInfo.getAmount())
+                .setAmount(cash.getAmount())
                 .setCurrency(new CurrencyRef()
-                        .setSymbolicCode(cashInfo.getCurrency()));
+                        .setSymbolicCode(cash.getCurrency()));
     }
 
 }

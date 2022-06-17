@@ -6,15 +6,15 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReferenceInfoToInternalDtoConverter
-        implements Converter<dev.vality.swag.fraudbusters.model.MerchantInfo, ReferenceInfo> {
+public class MerchantToInternalDtoConverter
+        implements Converter<dev.vality.swag.fraudbusters.model.Merchant, ReferenceInfo> {
 
     @Override
-    public ReferenceInfo convert(dev.vality.swag.fraudbusters.model.MerchantInfo merchantInfo) {
+    public ReferenceInfo convert(dev.vality.swag.fraudbusters.model.Merchant merchant) {
         ReferenceInfo referenceInfo = new ReferenceInfo();
         referenceInfo.setMerchantInfo(new MerchantInfo()
-                .setPartyId(merchantInfo.getPartyId())
-                .setShopId(merchantInfo.getShopId()));
+                .setPartyId(merchant.getId())
+                .setShopId(merchant.getShop().getId()));
         return referenceInfo;
     }
 
