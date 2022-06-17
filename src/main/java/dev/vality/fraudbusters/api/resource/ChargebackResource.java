@@ -7,6 +7,7 @@ import dev.vality.swag.fraudbusters.model.ChargebacksRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,8 @@ public class ChargebackResource implements ChargebacksApi {
             fraudbustersService.insertChargebacks(chargebacks);
         }
         log.debug("<- insertChargebacks success request: {}", chargebacksRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 }
