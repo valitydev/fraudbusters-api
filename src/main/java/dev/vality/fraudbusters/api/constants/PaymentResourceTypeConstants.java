@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PaymentResourceTypes {
+public class PaymentResourceTypeConstants {
 
     public static final String BANK_CARD = "BankCard";
 

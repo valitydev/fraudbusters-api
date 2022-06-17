@@ -27,7 +27,8 @@ class PaymentInspectRequestToContextConverterTest {
         context.getPayment().getPayment().getPayer().getPaymentResource().getContactInfo().validate();
         context.getPayment().getPayment().getPayer().getPaymentResource().getResource().validate();
         context.getPayment().getPayment().getPayer().getPaymentResource().getResource().getClientInfo().validate();
-        context.getPayment().getPayment().getPayer().getPaymentResource().getResource().getPaymentTool().getBankCard().validate();
+        context.getPayment().getPayment().getPayer().getPaymentResource().getResource().getPaymentTool().getBankCard()
+                .validate();
         context.getPayment().getParty().validate();
         context.getPayment().getShop().validate();
         context.getPayment().getInvoice().validate();
