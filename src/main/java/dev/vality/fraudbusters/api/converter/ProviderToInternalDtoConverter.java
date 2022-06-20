@@ -1,15 +1,16 @@
 package dev.vality.fraudbusters.api.converter;
 
 import dev.vality.damsel.fraudbusters.ProviderInfo;
+import dev.vality.swag.fraudbusters.model.Provider;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProviderToInternalDtoConverter
-        implements Converter<dev.vality.swag.fraudbusters.model.Provider, ProviderInfo> {
+        implements Converter<Provider, ProviderInfo> {
 
     @Override
-    public ProviderInfo convert(dev.vality.swag.fraudbusters.model.Provider provider) {
+    public ProviderInfo convert(Provider provider) {
         return new ProviderInfo()
                 .setProviderId(provider.getId())
                 .setCountry(provider.getCountry())
