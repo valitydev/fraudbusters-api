@@ -2,7 +2,6 @@ package dev.vality.fraudbusters.api.converter;
 
 import dev.vality.damsel.domain.CurrencyRef;
 import dev.vality.damsel.fraudbusters.Account;
-import dev.vality.damsel.fraudbusters.Resource;
 import dev.vality.damsel.fraudbusters.Withdrawal;
 import dev.vality.damsel.fraudbusters.WithdrawalStatus;
 import dev.vality.swag.fraudbusters.model.WithdrawalsRequest;
@@ -18,10 +17,10 @@ import java.util.stream.Collectors;
 public class WithdrawalsRequestToWithdrawalsConverter implements Converter<WithdrawalsRequest, List<Withdrawal>> {
 
     public static final String UNKNOWN = "UNKNOWN";
-    private final CacheToInternalDtoConverter cacheToInternalDtoConverter;
+    private final CachToInternalDtoConverter cachToInternalDtoConverter;
     private final ErrorToInternalDtoConverter errorToInternalDtoConverter;
-    private final ProviderInfoToInternalDtoConverter providerInfoToInternalDtoConverter;
-    private final BankCardToInternalDtoConverter bankCardToInternalDtoConverter;
+    private final ProviderToInternalDtoConverter providerToInternalDtoConverter;
+    private final PaymentResourceToResourceConverter paymentResourceToResourceConverter;
 
     @Override
     public List<Withdrawal> convert(WithdrawalsRequest request) {
@@ -32,17 +31,17 @@ public class WithdrawalsRequestToWithdrawalsConverter implements Converter<Withd
 
     private Withdrawal mapWithdrawal(dev.vality.swag.fraudbusters.model.Withdrawal item) {
         return new Withdrawal()
-                .setCost(cacheToInternalDtoConverter.convert(item.getCashInfo()))
+                .setCost(cachToInternalDtoConverter.convert(item.getCash()))
                 .setId(item.getId())
                 .setEventTime(item.getEventTime().toInstant().toString())
-                .setProviderInfo(providerInfoToInternalDtoConverter.convert(item.getProviderInfo()))
+                .setProviderInfo(providerToInternalDtoConverter.convert(item.getProvider()))
                 .setStatus(WithdrawalStatus.valueOf(item.getStatus().getValue()))
                 .setError(errorToInternalDtoConverter.convert(item.getError()))
                 .setAccount(new Account()
-                        .setId(item.getAccount().getAccountId())
+                        .setId(item.getAccount().getId())
                         .setIdentity(UNKNOWN)
                         .setCurrency(new CurrencyRef(item.getAccount().getCurrency())))
-                .setDestinationResource(Resource.bank_card(bankCardToInternalDtoConverter.convert(item.getBankCard())));
+                .setDestinationResource(paymentResourceToResourceConverter.convert(item.getPaymentResource()));
     }
 
 }

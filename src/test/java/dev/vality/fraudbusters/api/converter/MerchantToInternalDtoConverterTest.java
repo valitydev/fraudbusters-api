@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class ReferenceInfoToInternalDtoConverterTest {
+class MerchantToInternalDtoConverterTest {
 
     @Test
     void convert() throws TException {
-        ReferenceInfoToInternalDtoConverter converter = new ReferenceInfoToInternalDtoConverter();
+        MerchantToInternalDtoConverter converter = new MerchantToInternalDtoConverter();
 
-        ReferenceInfo referenceInfo = converter.convert(ApiBeanGenerator.initMerachantInfo());
+        ReferenceInfo referenceInfo = converter.convert(ApiBeanGenerator.initMerchant());
 
         assertNotNull(referenceInfo);
         MerchantInfo merchantInfo = referenceInfo.getMerchantInfo();

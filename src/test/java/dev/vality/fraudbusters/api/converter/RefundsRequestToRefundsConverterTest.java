@@ -17,26 +17,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class RefundsRequestToRefundsConverterTest {
 
     @Mock
-    CacheToInternalDtoConverter cacheToInternalDtoConverter;
+    CachToInternalDtoConverter cachToInternalDtoConverter;
     @Mock
-    ClientInfoToInternalDtoConverter clientInfoToInternalDtoConverter;
+    CustomerToInternalDtoConverter customerToInternalDtoConverter;
     @Mock
-    PaymentToolToInternalDtoConverter paymentToolToInternalDtoConverter;
+    PaymentResourceToPaymentToolConverter paymentResourceToPaymentToolConverter;
     @Mock
-    ProviderInfoToInternalDtoConverter providerInfoToInternalDtoConverter;
+    ProviderToInternalDtoConverter providerToInternalDtoConverter;
     @Mock
-    ReferenceInfoToInternalDtoConverter referenceInfoToInternalDtoConverter;
+    MerchantToInternalDtoConverter merchantToInternalDtoConverter;
     @Mock
     ErrorToInternalDtoConverter errorToInternalDtoConverter;
 
     @Test
     void convert() {
         RefundsRequestToRefundsConverter converter = new RefundsRequestToRefundsConverter(
-                cacheToInternalDtoConverter,
-                clientInfoToInternalDtoConverter,
-                paymentToolToInternalDtoConverter,
-                providerInfoToInternalDtoConverter,
-                referenceInfoToInternalDtoConverter,
+                cachToInternalDtoConverter,
+                customerToInternalDtoConverter,
+                paymentResourceToPaymentToolConverter,
+                providerToInternalDtoConverter,
+                merchantToInternalDtoConverter,
                 errorToInternalDtoConverter
         );
 

@@ -8,19 +8,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class ClientInfoToInternalDtoConverterTest {
+class CustomerToInternalDtoConverterTest {
 
     @Test
     void convert() throws TException {
-        ClientInfoToInternalDtoConverter clientInfoToInternalDtoConverter = new ClientInfoToInternalDtoConverter();
+        CustomerToInternalDtoConverter customerToInternalDtoConverter = new CustomerToInternalDtoConverter();
 
-        ClientInfo clientInfo = clientInfoToInternalDtoConverter.convert(ApiBeanGenerator.initUserInfo());
+        ClientInfo clientInfo = customerToInternalDtoConverter.convert(ApiBeanGenerator.initCustomer());
 
         assertNotNull(clientInfo);
         clientInfo.validate();
 
         assertEquals(ApiBeanGenerator.EMAIL, clientInfo.getEmail());
-        assertEquals(ApiBeanGenerator.FINGERPRONT, clientInfo.getFingerprint());
+        assertEquals(ApiBeanGenerator.FINGERPRINT, clientInfo.getFingerprint());
         assertEquals(ApiBeanGenerator.IP, clientInfo.getIp());
     }
 }

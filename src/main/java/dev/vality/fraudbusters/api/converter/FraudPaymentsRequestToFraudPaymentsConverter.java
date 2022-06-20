@@ -21,7 +21,7 @@ public class FraudPaymentsRequestToFraudPaymentsConverter
 
     private FraudPayment mapFraudPayment(dev.vality.swag.fraudbusters.model.FraudPayment item) {
         return new FraudPayment()
-                .setId(item.getPayemntId())
+                .setId(item.getPaymentId())
                 .setEventTime(item.getEventTime().toInstant().toString())
                 .setComment(item.getComment())
                 .setType(item.getType());

@@ -3,7 +3,6 @@ package dev.vality.fraudbusters.api.converter;
 import dev.vality.damsel.fraudbusters.PayerType;
 import dev.vality.damsel.fraudbusters.Payment;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
-import dev.vality.swag.fraudbusters.model.PaymentContext;
 import dev.vality.swag.fraudbusters.model.PaymentsChangesRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
@@ -16,11 +15,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PaymentsChangesRequestToPaymentsConverter implements Converter<PaymentsChangesRequest, List<Payment>> {
 
-    private final CacheToInternalDtoConverter cacheToInternalDtoConverter;
-    private final ClientInfoToInternalDtoConverter clientInfoToInternalDtoConverter;
-    private final PaymentToolToInternalDtoConverter paymentToolToInternalDtoConverter;
-    private final ProviderInfoToInternalDtoConverter providerInfoToInternalDtoConverter;
-    private final ReferenceInfoToInternalDtoConverter referenceInfoToInternalDtoConverter;
+    private final CachToInternalDtoConverter cachToInternalDtoConverter;
+    private final CustomerToInternalDtoConverter customerToInternalDtoConverter;
+    private final PaymentResourceToPaymentToolConverter paymentResourceToPaymentToolConverter;
+    private final ProviderToInternalDtoConverter providerToInternalDtoConverter;
+    private final MerchantToInternalDtoConverter merchantToInternalDtoConverter;
     private final ErrorToInternalDtoConverter errorToInternalDtoConverter;
 
     @Override
@@ -31,20 +30,20 @@ public class PaymentsChangesRequestToPaymentsConverter implements Converter<Paym
     }
 
     private Payment mapPayment(dev.vality.swag.fraudbusters.model.PaymentChange item) {
-        PaymentContext paymentContext = item.getPaymentContext();
+        var payment = item.getPayment();
         return new Payment()
-                .setCost(cacheToInternalDtoConverter.convert(paymentContext.getCashInfo()))
-                .setId(paymentContext.getId())
-                .setEventTime(paymentContext.getCreatedAt().toInstant().toString())
-                .setClientInfo(clientInfoToInternalDtoConverter.convert(paymentContext.getPayerInfo()))
-                .setPayerType(PayerType.valueOf(paymentContext.getPayerType().getValue()))
-                .setPaymentTool(paymentToolToInternalDtoConverter.convert(paymentContext.getBankCard()))
-                .setProviderInfo(providerInfoToInternalDtoConverter.convert(paymentContext.getProviderInfo()))
-                .setReferenceInfo(referenceInfoToInternalDtoConverter.convert(paymentContext.getMerchantInfo()))
+                .setCost(cachToInternalDtoConverter.convert(payment.getCash()))
+                .setId(payment.getId())
+                .setEventTime(payment.getCreatedAt().toInstant().toString())
+                .setClientInfo(customerToInternalDtoConverter.convert(payment.getCustomer()))
+                .setPayerType(PayerType.valueOf(payment.getPayerType().getValue()))
+                .setProviderInfo(providerToInternalDtoConverter.convert(payment.getProvider()))
+                .setReferenceInfo(merchantToInternalDtoConverter.convert(payment.getMerchant()))
                 .setStatus(PaymentStatus.valueOf(item.getPaymentStatus().getValue()))
-                .setRecurrent(paymentContext.getRecurrent())
-                .setMobile(paymentContext.getMobile())
-                .setError(errorToInternalDtoConverter.convert(item.getError()));
+                .setError(errorToInternalDtoConverter.convert(item.getError()))
+                .setPaymentTool(paymentResourceToPaymentToolConverter.convert(payment.getPaymentResource()))
+                .setRecurrent(dev.vality.swag.fraudbusters.model.PayerType.RECURRENT.equals(payment.getPayerType()))
+                .setMobile(dev.vality.swag.fraudbusters.model.PayerType.MOBILE.equals(payment.getPayerType()));
     }
 
 }

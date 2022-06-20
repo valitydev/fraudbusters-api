@@ -17,7 +17,7 @@ public class BankCardToInternalDtoConverter
                 .setBin(bankCard.getBin())
                 .setLastDigits(bankCard.getLastDigits())
                 .setBankName(bankCard.getBankName())
-                .setIssuerCountry(CountryCode.valueOf(bankCard.getBinCountryCode()))
+                .setIssuerCountry(CountryCode.valueOf(bankCard.getCountryCode()))
                 .setPaymentSystem(new PaymentSystemRef()
                         .setId(bankCard.getPaymentSystem())
                 );

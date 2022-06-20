@@ -17,19 +17,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class WithdrawalsRequestToWithdrawalsConverterTest {
 
     @Mock
-    CacheToInternalDtoConverter cacheToInternalDtoConverter;
+    CachToInternalDtoConverter cachToInternalDtoConverter;
     @Mock
-    ProviderInfoToInternalDtoConverter providerInfoToInternalDtoConverter;
+    ProviderToInternalDtoConverter providerToInternalDtoConverter;
     @Mock
     ErrorToInternalDtoConverter errorToInternalDtoConverter;
 
     @Test
     void convert() {
         WithdrawalsRequestToWithdrawalsConverter converter = new WithdrawalsRequestToWithdrawalsConverter(
-                cacheToInternalDtoConverter,
+                cachToInternalDtoConverter,
                 errorToInternalDtoConverter,
-                providerInfoToInternalDtoConverter,
-                new BankCardToInternalDtoConverter()
+                providerToInternalDtoConverter,
+                new PaymentResourceToResourceConverter(new BankCardToInternalDtoConverter())
         );
 
         List<Withdrawal> withdrawals = converter.convert(new WithdrawalsRequest().withdrawals(

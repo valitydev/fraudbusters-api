@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class ProviderInfoToInternalDtoConverterTest {
+class ProviderToInternalDtoConverterTest {
 
     @Test
     void convert() throws TException {
-        ProviderInfoToInternalDtoConverter converter = new ProviderInfoToInternalDtoConverter();
+        ProviderToInternalDtoConverter converter = new ProviderToInternalDtoConverter();
 
-        ProviderInfo providerInfo = converter.convert(ApiBeanGenerator.initProviderInfo());
+        ProviderInfo providerInfo = converter.convert(ApiBeanGenerator.initProvider());
 
         assertNotNull(providerInfo);
         providerInfo.validate();
