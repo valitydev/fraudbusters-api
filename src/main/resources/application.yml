@@ -38,8 +38,8 @@ info:
 fraudbusters:
   service:
     payment:
-      url: localhost:8022
+      url: http://localhost:8022
       networkTimeout: 10000
     inspector:
-      url: localhost:8022
+      url: http://localhost:8022
       networkTimeout: 10000
