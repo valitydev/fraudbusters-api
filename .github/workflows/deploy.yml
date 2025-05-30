@@ -1,13 +1,14 @@
-name: Deploy Docker Image
+name: Maven Deploy Artifact
 
 on:
   push:
     branches:
       - 'master'
+      - 'main'
 
 jobs:
   build-and-deploy:
-    uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v1
+    uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v3
     with:
       ignore-coverage: true
     secrets:
