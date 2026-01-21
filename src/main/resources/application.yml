@@ -1,29 +1,24 @@
 server:
-  port: '@server.port@'
+  port: ${server.port}
 
 management:
-  security:
-    flag: false
   server:
-    port: '@management.port@'
-  metrics:
-    export:
-      statsd:
-        flavor: etsy
-        enabled: false
-      prometheus:
-        enabled: false
+    port: ${management.port}
   endpoint:
     health:
       show-details: always
     metrics:
-      enabled: true
+      access: unrestricted
     prometheus:
-      enabled: true
+      access: unrestricted
   endpoints:
     web:
       exposure:
         include: health,info,prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: false
 
 spring:
   application:
@@ -31,6 +26,15 @@ spring:
   output:
     ansi:
       enabled: always
+  security:
+    oauth2:
+      resourceserver:
+        url: https://auth.domain
+        jwt:
+          realm: internal
+          issuer-uri: >
+            ${spring.security.oauth2.resourceserver.url}/auth/realms/
+            ${spring.security.oauth2.resourceserver.jwt.realm}
 info:
   version: '@project.version@'
   stage: dev

@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -24,7 +23,7 @@ public class PaymentResource implements PaymentsApi {
     private final Converter<PaymentsChangesRequest, List<Payment>> paymentsChangesRequestToPaymentsConverter;
 
     @Override
-    public ResponseEntity<Void> insertPaymentsChanges(@Valid PaymentsChangesRequest paymentsChangesRequest) {
+    public ResponseEntity<Void> insertPaymentsChanges(PaymentsChangesRequest paymentsChangesRequest) {
         log.debug("-> insertPaymentsChanges request: {}", paymentsChangesRequest);
         if (!CollectionUtils.isEmpty(paymentsChangesRequest.getPaymentsChanges())) {
             List<Payment> payments = paymentsChangesRequestToPaymentsConverter.convert(paymentsChangesRequest);

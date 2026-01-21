@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -24,7 +23,7 @@ public class ChargebackResource implements ChargebacksApi {
     private final Converter<ChargebacksRequest, List<Chargeback>> chargebacksRequestToChargebacksConverter;
 
     @Override
-    public ResponseEntity<Void> insertChargebacks(@Valid ChargebacksRequest chargebacksRequest) {
+    public ResponseEntity<Void> insertChargebacks(ChargebacksRequest chargebacksRequest) {
         log.debug("-> insertChargebacks request: {}", chargebacksRequest);
         if (!CollectionUtils.isEmpty(chargebacksRequest.getChargebacks())) {
             List<Chargeback> chargebacks = chargebacksRequestToChargebacksConverter.convert(chargebacksRequest);

@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.api.utils;
 
-import dev.vality.swag.fraudbusters.model.Error;
 import dev.vality.swag.fraudbusters.model.*;
+import dev.vality.swag.fraudbusters.model.Error;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;

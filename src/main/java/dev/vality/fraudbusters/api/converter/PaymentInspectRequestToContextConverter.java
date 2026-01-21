@@ -1,12 +1,11 @@
 package dev.vality.fraudbusters.api.converter;
 
-import dev.vality.damsel.domain.BankCard;
 import dev.vality.damsel.domain.*;
+import dev.vality.damsel.domain.BankCard;
+import dev.vality.damsel.proxy_inspector.*;
 import dev.vality.damsel.proxy_inspector.Invoice;
 import dev.vality.damsel.proxy_inspector.InvoicePayment;
-import dev.vality.damsel.proxy_inspector.Party;
 import dev.vality.damsel.proxy_inspector.Shop;
-import dev.vality.damsel.proxy_inspector.*;
 import dev.vality.swag.fraudbusters.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
@@ -38,9 +37,9 @@ public class PaymentInspectRequestToContextConverter implements Converter<Paymen
     private Shop buildShop(Merchant merchant) {
         var shop = merchant.getShop();
         return new Shop()
-                .setId(shop.getId())
-                .setDetails(new ShopDetails()
-                        .setName(shop.getName()))
+                .setShopRef(new ShopConfigRef()
+                        .setId(shop.getId()))
+                .setName(shop.getName())
                 .setCategory(new Category()
                         .setName(shop.getCategory())
                         .setDescription(MOCK_UNUSED_DATA))
@@ -49,7 +48,8 @@ public class PaymentInspectRequestToContextConverter implements Converter<Paymen
 
     private Party buildParty(Merchant merchant) {
         return new Party()
-                .setPartyId(merchant.getId());
+                .setPartyRef(new PartyConfigRef()
+                        .setId(merchant.getId()));
     }
 
     private Invoice buildInvoice(Payment payment) {
