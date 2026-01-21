@@ -15,9 +15,9 @@ import org.wiremock.spring.EnableWireMock;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FraudbustersApiApplication.class},
         properties = {
-                "spring.security.oauth2.resourceserver.url=${wiremock.server.baseUrl}",
-                "spring.security.oauth2.resourceserver.jwt.issuer-uri=${wiremock.server.baseUrl}/auth/realms/" +
-                "${spring.security.oauth2.resourceserver.jwt.realm}"})
+                    "spring.security.oauth2.resourceserver.url=${wiremock.server.baseUrl}",
+                    "spring.security.oauth2.resourceserver.jwt.issuer-uri=${wiremock.server.baseUrl}/auth/realms/" +
+                    "${spring.security.oauth2.resourceserver.jwt.realm}"})
 @AutoConfigureMockMvc
 @EnableWireMock
 @ExtendWith(SpringExtension.class)
