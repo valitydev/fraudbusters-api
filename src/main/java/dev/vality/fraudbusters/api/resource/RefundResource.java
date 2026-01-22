@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -24,7 +23,7 @@ public class RefundResource implements RefundsApi {
     private final Converter<RefundsRequest, List<Refund>> refundsRequestToRefundsConverter;
 
     @Override
-    public ResponseEntity<Void> insertRefunds(@Valid RefundsRequest refundsRequest) {
+    public ResponseEntity<Void> insertRefunds(RefundsRequest refundsRequest) {
         log.debug("-> insertRefunds request: {}", refundsRequest);
         if (!CollectionUtils.isEmpty(refundsRequest.getRefunds())) {
             List<Refund> refunds = refundsRequestToRefundsConverter.convert(refundsRequest);

@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.16</version>
+        <version>3.1.9</version>
     </parent>
 
     <artifactId>fraudbusters-api</artifactId>
@@ -23,24 +23,18 @@
         <management.port>8023</management.port>
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
-        <swag-fraudbusters.version>1.47-7bd0be7-server</swag-fraudbusters.version>
+        <swag-fraudbusters.version>1.117-7e0ac25</swag-fraudbusters.version>
         <fraudbusters-proto.version>1.108-0800fde</fraudbusters-proto.version>
+        <jjwt-version>0.12.6</jjwt-version>
+        <damsel.version>1.681-7a97267</damsel.version>
     </properties>
 
     <dependencies>
 
         <!--ValityDev-->
         <dependency>
-            <groupId>dev.vality.woody</groupId>
-            <artifactId>woody-thrift</artifactId>
-        </dependency>
-        <dependency>
             <groupId>dev.vality</groupId>
-            <artifactId>shared-resources</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dev.vality</groupId>
-            <artifactId>swag-fraudbusters</artifactId>
+            <artifactId>swag-fraudbusters-server</artifactId>
             <version>${swag-fraudbusters.version}</version>
         </dependency>
         <dependency>
@@ -49,8 +43,23 @@
             <version>${fraudbusters-proto.version}</version>
         </dependency>
         <dependency>
+            <groupId>dev.vality</groupId>
+            <artifactId>damsel</artifactId>
+            <version>${damsel.version}</version>
+        </dependency>
+        <dependency>
             <groupId>dev.vality.geck</groupId>
             <artifactId>serializer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dev.vality.woody</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.vality.woody</groupId>
+            <artifactId>woody-thrift</artifactId>
+            <version>2.0.9</version>
         </dependency>
         <dependency>
             <groupId>dev.vality.geck</groupId>
@@ -85,15 +94,29 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
 
         <!--third party-->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -110,12 +133,36 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock.integrations</groupId>
+            <artifactId>wiremock-spring-boot</artifactId>
+            <version>3.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk18on</artifactId>
+            <version>1.79</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -147,6 +194,23 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>15</source>
+                    <target>15</target>
+                    <parameters>true</parameters>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.36</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

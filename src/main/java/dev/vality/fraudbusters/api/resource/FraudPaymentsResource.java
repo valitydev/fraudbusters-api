@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -24,7 +23,7 @@ public class FraudPaymentsResource implements FraudPaymentsApi {
     private final Converter<FraudPaymentsRequest, List<FraudPayment>> fraudPaymentsRequestToFraudPaymentsConverter;
 
     @Override
-    public ResponseEntity<Void> insertFraudPayments(@Valid FraudPaymentsRequest fraudPaymentsRequest) {
+    public ResponseEntity<Void> insertFraudPayments(FraudPaymentsRequest fraudPaymentsRequest) {
         log.debug("-> insertFraudPayments request: {}", fraudPaymentsRequest);
         if (!CollectionUtils.isEmpty(fraudPaymentsRequest.getFraudPayments())) {
             List<FraudPayment> fraudPayments =

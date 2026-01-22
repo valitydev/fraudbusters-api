@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +24,7 @@ public class WithdrawalResource implements WithdrawalsApi {
 
 
     @Override
-    public ResponseEntity<Void> insertWithdrawals(@Valid WithdrawalsRequest withdrawalsRequest) {
+    public ResponseEntity<Void> insertWithdrawals(WithdrawalsRequest withdrawalsRequest) {
         log.debug("-> insertWithdrawals request: {}", withdrawalsRequest);
         if (!CollectionUtils.isEmpty(withdrawalsRequest.getWithdrawals())) {
             List<Withdrawal> withdrawals = withdrawalsRequestToWithdrawalsConverter.convert(withdrawalsRequest);

@@ -2,25 +2,32 @@ package dev.vality.fraudbusters.api.resource;
 
 import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
 import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
+import dev.vality.fraudbusters.api.config.AbstractKeycloakOpenIdAsWiremockConfig;
 import dev.vality.fraudbusters.api.service.FraudbustersDataService;
 import dev.vality.fraudbusters.api.service.FraudbustersInspectorService;
 import dev.vality.fraudbusters.api.utils.ApiBeanGenerator;
 import dev.vality.swag.fraudbusters.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
 import java.util.List;
 
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ResourceTest {
+class ResourceTest extends AbstractKeycloakOpenIdAsWiremockConfig {
 
     public static final String CHARGEBACKS = "/chargebacks";
     public static final String REFUNDS = "/refunds";
@@ -28,21 +35,30 @@ class ResourceTest {
     public static final String FRAUD_PAYMENTS = "/fraud-payments";
     public static final String WITHDRAWALS = "/withdrawals";
     public static final String INSPECTOR = "/inspect-payment";
+    public static final String INSPECT_USER = "/inspect-user";
     public static final String BASE_URL = "http://localhost:";
 
     @LocalServerPort
     int serverPort;
 
-    @MockBean
+    @MockitoBean
     FraudbustersDataService fraudbustersDataService;
-    @MockBean
+    @MockitoBean
     FraudbustersInspectorService fraudbustersInspectorService;
-    @MockBean
+    @MockitoBean
     PaymentServiceSrv.Iface paymentServiceSrv;
-    @MockBean
+    @MockitoBean
     InspectorProxySrv.Iface proxyInspectorSrv;
 
     RestTemplate restTemplate = new RestTemplate();
+
+    @BeforeEach
+    void setUp() {
+        restTemplate.getInterceptors().add((request, body, execution) -> {
+            request.getHeaders().setBearerAuth(generateSimpleJwt());
+            return execution.execute(request, body);
+        });
+    }
 
     @Test
     void insertChargebacksTest() {
@@ -145,8 +161,36 @@ class ResourceTest {
         verify(fraudbustersInspectorService, times(1)).inspectPayment(any());
     }
 
+    @Test
+    void inspectUserTest() {
+        when(fraudbustersInspectorService.inspectUser(any())).thenReturn(new UserInspectResult());
+
+        UserInspectRequest request = new UserInspectRequest();
+        assertThrows(HttpClientErrorException.BadRequest.class, () ->
+                restTemplate.postForEntity(initUrl(INSPECT_USER), request, UserInspectResult.class));
+
+        request.user(ApiBeanGenerator.initCustomer());
+        request.merchants(List.of(ApiBeanGenerator.initMerchant()));
+        restTemplate.postForEntity(initUrl(INSPECT_USER), request, UserInspectResult.class);
+        verify(fraudbustersInspectorService, times(1)).inspectUser(any());
+    }
+
     private String initUrl(String fraudbustersRefunds) {
         return BASE_URL + serverPort + fraudbustersRefunds;
+    }
+
+    @TestConfiguration
+    static class JwtTestConfig {
+
+        @Bean
+        JwtDecoder jwtDecoder() {
+            return token -> Jwt.withTokenValue(token)
+                    .header("alg", "none")
+                    .claim("sub", "test")
+                    .issuedAt(Instant.now())
+                    .expiresAt(Instant.now().plusSeconds(3600))
+                    .build();
+        }
     }
 
 }
