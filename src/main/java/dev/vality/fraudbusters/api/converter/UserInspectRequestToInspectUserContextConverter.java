@@ -24,7 +24,7 @@ public class UserInspectRequestToInspectUserContextConverter
 
     @Override
     public InspectUserContext convert(UserInspectRequest request) {
-        ContactInfo userInfo = buildUserInfo(request.getUser());
+        ContactInfo userInfo = buildContactInfo(request.getCustomer());
         List<ShopContext> shopContexts = Optional.ofNullable(request.getMerchants())
                 .orElse(Collections.emptyList())
                 .stream()
@@ -35,8 +35,8 @@ public class UserInspectRequestToInspectUserContextConverter
                 .setShopList(shopContexts);
     }
 
-    private ContactInfo buildUserInfo(Customer user) {
-        Contact contact = Optional.ofNullable(user)
+    private ContactInfo buildContactInfo(Customer customer) {
+        Contact contact = Optional.ofNullable(customer)
                 .map(Customer::getContact)
                 .orElseGet(Contact::new);
         return new ContactInfo()

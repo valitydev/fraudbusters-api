@@ -23,7 +23,7 @@
         <management.port>8023</management.port>
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
-        <swag-fraudbusters.version>1.117-7e0ac25</swag-fraudbusters.version>
+        <swag-fraudbusters.version>1.119-7d5622c</swag-fraudbusters.version>
         <fraudbusters-proto.version>1.108-0800fde</fraudbusters-proto.version>
         <jjwt-version>0.12.6</jjwt-version>
         <damsel.version>1.681-7a97267</damsel.version>

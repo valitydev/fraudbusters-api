@@ -166,10 +166,11 @@ class ResourceTest extends AbstractKeycloakOpenIdAsWiremockConfig {
         when(fraudbustersInspectorService.inspectUser(any())).thenReturn(new UserInspectResult());
 
         UserInspectRequest request = new UserInspectRequest();
+        request.setMerchants(null);
         assertThrows(HttpClientErrorException.BadRequest.class, () ->
                 restTemplate.postForEntity(initUrl(INSPECT_USER), request, UserInspectResult.class));
 
-        request.user(ApiBeanGenerator.initCustomer());
+        request.customer(ApiBeanGenerator.initCustomer());
         request.merchants(List.of(ApiBeanGenerator.initMerchant()));
         restTemplate.postForEntity(initUrl(INSPECT_USER), request, UserInspectResult.class);
         verify(fraudbustersInspectorService, times(1)).inspectUser(any());
