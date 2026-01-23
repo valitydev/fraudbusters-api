@@ -5,6 +5,7 @@ import dev.vality.fraudbusters.api.service.FraudbustersInspectorService;
 import dev.vality.swag.fraudbusters.api.InspectUserApi;
 import dev.vality.swag.fraudbusters.model.UserInspectRequest;
 import dev.vality.swag.fraudbusters.model.UserInspectResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@Validated
 @RequiredArgsConstructor
 public class UserInspectorResource implements InspectUserApi {
 
@@ -21,7 +23,7 @@ public class UserInspectorResource implements InspectUserApi {
     private final Converter<UserInspectRequest, InspectUserContext> userInspectRequestToInspectUserContextConverter;
 
     @Override
-    public ResponseEntity<UserInspectResult> inspectUser(UserInspectRequest userInspectRequest) {
+    public ResponseEntity<UserInspectResult> inspectUser(@Valid UserInspectRequest userInspectRequest) {
         log.debug("-> inspectUser request: {}", userInspectRequest);
         InspectUserContext context = userInspectRequestToInspectUserContextConverter.convert(userInspectRequest);
         UserInspectResult result = fraudbustersInspectorService.inspectUser(context);
