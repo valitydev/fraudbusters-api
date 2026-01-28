@@ -26,14 +26,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(
-                (authorize) -> authorize
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/actuator/health/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**/health/liveness").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**/health/readiness").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**/actuator/prometheus").permitAll()
-                        .anyRequest().authenticated());
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
+                .anyRequest().authenticated()
+        );
         http.oauth2ResourceServer(server -> server.jwt(token -> token.jwtAuthenticationConverter(jwtAuthConverter)));
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.cors(c -> c.configurationSource(corsConfigurationSource()));
