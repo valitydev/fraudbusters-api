@@ -39,7 +39,6 @@ public class WithdrawalsRequestToWithdrawalsConverter implements Converter<Withd
                 .setError(errorToInternalDtoConverter.convert(item.getError()))
                 .setAccount(new Account()
                         .setId(item.getAccount().getId())
-                        .setIdentity(UNKNOWN)
                         .setCurrency(new CurrencyRef(item.getAccount().getCurrency())))
                 .setDestinationResource(paymentResourceToResourceConverter.convert(item.getPaymentResource()));
     }

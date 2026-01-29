@@ -47,3 +47,6 @@ fraudbusters:
     inspector:
       url: http://localhost:8022
       networkTimeout: 10000
+    user.inspector:
+      url: http://localhost:8022
+      networkTimeout: 10000
