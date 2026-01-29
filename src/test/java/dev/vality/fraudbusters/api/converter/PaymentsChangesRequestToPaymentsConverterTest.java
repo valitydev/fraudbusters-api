@@ -54,7 +54,7 @@ class PaymentsChangesRequestToPaymentsConverterTest {
         assertEquals(ApiBeanGenerator.ID, payment.getId());
         assertNotNull(payment.getEventTime());
         assertEquals(PaymentStatus.captured, payment.getStatus());
-        assertFalse(payment.isMobile());
-        assertTrue(payment.isRecurrent());
+        assertFalse(payment.mobile);
+        assertTrue(payment.recurrent);
     }
 }

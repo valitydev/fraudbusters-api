@@ -1,5 +1,6 @@
 package dev.vality.fraudbusters.api.configuration;
 
+import dev.vality.damsel.fraudbusters.InspectorServiceSrv;
 import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
 import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
 import dev.vality.woody.thrift.impl.http.THSpawnClientBuilder;
@@ -20,6 +21,15 @@ public class FraudbustersConfig {
         return new THSpawnClientBuilder()
                 .withNetworkTimeout(networkTimeout)
                 .withAddress(resource.getURI()).build(PaymentServiceSrv.Iface.class);
+    }
+
+    @Bean
+    public InspectorServiceSrv.Iface inspectorServiceSrv(
+            @Value("${fraudbusters.service.user.inspector.url}") Resource resource,
+            @Value("${fraudbusters.service.user.inspector.networkTimeout}") int networkTimeout) throws IOException {
+        return new THSpawnClientBuilder()
+                .withNetworkTimeout(networkTimeout)
+                .withAddress(resource.getURI()).build(InspectorServiceSrv.Iface.class);
     }
 
     @Bean

@@ -1,9 +1,8 @@
 package dev.vality.fraudbusters.api.converter;
 
-import dev.vality.damsel.domain.*;
-import dev.vality.damsel.proxy_inspector.InspectUserContext;
-import dev.vality.damsel.proxy_inspector.Party;
-import dev.vality.damsel.proxy_inspector.ShopContext;
+import dev.vality.damsel.fraudbusters.ClientInfo;
+import dev.vality.damsel.fraudbusters.InspectUserContext;
+import dev.vality.damsel.fraudbusters.ShopContext;
 import dev.vality.swag.fraudbusters.model.Contact;
 import dev.vality.swag.fraudbusters.model.Customer;
 import dev.vality.swag.fraudbusters.model.Merchant;
@@ -20,11 +19,9 @@ import java.util.stream.Collectors;
 public class UserInspectRequestToInspectUserContextConverter
         implements Converter<UserInspectRequest, InspectUserContext> {
 
-    private static final String MOCK_UNUSED_DATA = "MOCK_UNUSED_DATA";
-
     @Override
     public InspectUserContext convert(UserInspectRequest request) {
-        ContactInfo userInfo = buildContactInfo(request.getCustomer());
+        ClientInfo userInfo = buildContactInfo(request.getCustomer());
         List<ShopContext> shopContexts = Optional.ofNullable(request.getMerchants())
                 .orElse(Collections.emptyList())
                 .stream()
@@ -35,38 +32,24 @@ public class UserInspectRequestToInspectUserContextConverter
                 .setShopList(shopContexts);
     }
 
-    private ContactInfo buildContactInfo(Customer customer) {
+    private ClientInfo buildContactInfo(Customer customer) {
         Contact contact = Optional.ofNullable(customer)
                 .map(Customer::getContact)
                 .orElseGet(Contact::new);
-        return new ContactInfo()
+        ClientInfo clientInfo = new ClientInfo();
+        if (customer != null && customer.getDevice() != null) {
+            clientInfo.setFingerprint(customer.getDevice().getFingerprint())
+                    .setIp(customer.getDevice().getIp());
+        }
+        return clientInfo
                 .setEmail(contact.getEmail())
-                .setPhoneNumber(contact.getPhone());
+                .setPhone(contact.getPhone());
     }
 
     private ShopContext buildShopContext(Merchant merchant) {
-        Party party = buildParty(merchant);
-        dev.vality.damsel.proxy_inspector.Shop shop = buildShop(merchant);
         return new ShopContext()
-                .setParty(party)
-                .setShop(shop);
+                .setPartyId(merchant.getId())
+                .setShopId(merchant.getShop().getId());
     }
 
-    private Party buildParty(Merchant merchant) {
-        return new Party()
-                .setPartyRef(new PartyConfigRef()
-                        .setId(merchant.getId()));
-    }
-
-    private dev.vality.damsel.proxy_inspector.Shop buildShop(Merchant merchant) {
-        dev.vality.swag.fraudbusters.model.Shop shop = merchant.getShop();
-        return new dev.vality.damsel.proxy_inspector.Shop()
-                .setShopRef(new ShopConfigRef()
-                        .setId(shop.getId()))
-                .setName(shop.getName())
-                .setCategory(new Category()
-                        .setName(shop.getCategory())
-                        .setDescription(MOCK_UNUSED_DATA))
-                .setLocation(ShopLocation.url(shop.getLocation()));
-    }
 }

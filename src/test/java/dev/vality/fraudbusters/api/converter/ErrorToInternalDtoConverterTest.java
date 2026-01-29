@@ -20,6 +20,6 @@ class ErrorToInternalDtoConverterTest {
         error.validate();
 
         assertEquals(ApiBeanGenerator.ERROR_CODE, error.getErrorCode());
-        assertEquals(ApiBeanGenerator.ERROR_REASON, error.getErrorReason());
+        assertEquals(ApiBeanGenerator.ERROR_REASON, error.getErrorReason().get());
     }
 }

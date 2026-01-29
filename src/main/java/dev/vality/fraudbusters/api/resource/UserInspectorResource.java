@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.api.resource;
 
-import dev.vality.damsel.proxy_inspector.InspectUserContext;
+import dev.vality.damsel.fraudbusters.InspectUserContext;
 import dev.vality.fraudbusters.api.service.FraudbustersInspectorService;
 import dev.vality.swag.fraudbusters.api.InspectUserApi;
 import dev.vality.swag.fraudbusters.model.UserInspectRequest;

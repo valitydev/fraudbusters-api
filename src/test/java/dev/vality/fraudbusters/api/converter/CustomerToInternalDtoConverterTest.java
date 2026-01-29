@@ -19,8 +19,8 @@ class CustomerToInternalDtoConverterTest {
         assertNotNull(clientInfo);
         clientInfo.validate();
 
-        assertEquals(ApiBeanGenerator.EMAIL, clientInfo.getEmail());
-        assertEquals(ApiBeanGenerator.FINGERPRINT, clientInfo.getFingerprint());
-        assertEquals(ApiBeanGenerator.IP, clientInfo.getIp());
+        assertEquals(ApiBeanGenerator.EMAIL, clientInfo.getEmail().get());
+        assertEquals(ApiBeanGenerator.FINGERPRINT, clientInfo.getFingerprint().get());
+        assertEquals(ApiBeanGenerator.IP, clientInfo.getIp().get());
     }
 }
