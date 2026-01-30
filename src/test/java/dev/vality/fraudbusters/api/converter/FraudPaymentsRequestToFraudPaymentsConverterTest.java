@@ -27,9 +27,9 @@ class FraudPaymentsRequestToFraudPaymentsConverterTest {
 
         FraudPayment fraudPayment = fraudPayments.get(0);
         assertNotNull(fraudPayment);
-        assertEquals(ApiBeanGenerator.COMMENT, fraudPayment.getComment().get());
+        assertEquals(ApiBeanGenerator.COMMENT, fraudPayment.getComment());
         assertNotNull(fraudPayment.getEventTime());
         assertEquals(ApiBeanGenerator.PAYMENT_ID, fraudPayment.getId());
-        assertEquals(ApiBeanGenerator.TYPE, fraudPayment.getType().get());
+        assertEquals(ApiBeanGenerator.TYPE, fraudPayment.getType());
     }
 }
