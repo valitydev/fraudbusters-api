@@ -20,7 +20,7 @@ class ProviderToInternalDtoConverterTest {
         providerInfo.validate();
 
         assertEquals(ApiBeanGenerator.PROVIDER_ID, providerInfo.getProviderId());
-        assertEquals(ApiBeanGenerator.RUS, providerInfo.getCountry().get());
+        assertEquals(ApiBeanGenerator.RUS, providerInfo.getCountry());
         assertEquals(ApiBeanGenerator.TERMINAL_ID, providerInfo.getTerminalId());
     }
 }
